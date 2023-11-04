@@ -1,0 +1,89 @@
+/* Add your CSS styles here */
+body {
+  background-color: #e0e0e0;
+  /* A light gray background for contrast */
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  /* Default font */
+}
+
+/* Style for your boat and ocean tiles */
+.boat {
+  width: 50px;
+  /* Example width */
+  height: 100px;
+  /* Example height */
+  background-image: url('../images/boat.png');
+  /* Path to your boat image */
+  background-size: cover;
+  position: absolute;
+  /* Positioned absolutely to move freely */
+  cursor: move;
+  /* Cursor indicates it can be moved */
+}
+
+.ocean {
+  width: 100%;
+  /* Full width to cover the area */
+  height: 500px;
+  /* Example height */
+  background-color: #0077be;
+  /* Ocean blue */
+  overflow: hidden;
+  /* Ensures no scroll bars appear */
+  position: relative;
+  /* Allows for absolute positioning of children */
+}
+
+.wake {
+  width: 60px;
+  /* Example width of the wake */
+  height: 20px;
+  /* Example height of the wake */
+  background-color: #ffffff;
+  /* White wake */
+  opacity: 0.5;
+  /* Partially see-through */
+  position: absolute;
+  /* Positioned absolutely relative to parent */
+  border-radius: 50%;
+  /* Rounded edges */
+  transform: rotate(20deg);
+  /* Example rotation, adjust as necessary */
+  animation: wake-effect 2s infinite;
+  /* Animation for the wake effect */
+}
+
+.buoy {
+  width: 30px;
+  /* Example width */
+  height: 30px;
+  /* Example height */
+  background-image: url('/path-to-your-buoy-image.png');
+  /* Path to your buoy image */
+  background-size: cover;
+  position: absolute;
+  /* Positioned absolutely to move freely */
+  top: 50%;
+  /* Example position, adjust as necessary */
+  left: 50%;
+  /* Example position, adjust as necessary */
+  transform: translate(-50%, -50%);
+  /* Center the buoy */
+}
+
+/* Animation for the wake effect */
+@keyframes wake-effect {
+  0% {
+    opacity: 0.5;
+  }
+
+  50% {
+    opacity: 0.2;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}

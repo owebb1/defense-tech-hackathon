@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boat Wake Simulation</title>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <style>
+    #ocean {
+      width: 500px;
+      height: 500px;
+      background: #0099FF;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .boat {
+      width: 50px;
+      height: 20px;
+      background: #333;
+      position: absolute;
+      cursor: move;
+    }
+
+    .wake {
+      background: rgba(255, 255, 255, 0.5);
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .buoy {
+      width: 30px;
+      height: 30px;
+      background: #FFD700;
+      position: absolute;
+      border-radius: 50%;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="ocean">
+    <div class="boat" id="boat"></div>
+    <div class="buoy" style="top: 250px; left: 250px;"></div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+  <script src="../static/js/app.js"></script>
+  <script>
+    // JavaScript will be added here
+  </script>
+
+</body>
+
+</html>

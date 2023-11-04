@@ -1,28 +1,18 @@
 from joblib import load
-from flask import Flask, render_template, jsonify
+from app import app
+from flask import render_template
 import numpy as np
 import sqlite3
 import cv2
 import tensorflow as tf
-# from object_detection.utils import config_util
 import numpy as np
 import matplotlib.pyplot as plt
 # Now, on your device, you would load the model
 model = load('anomaly_detection_model.joblib')
 ships = ['carrier', 'cruiser', 'submarine', 'battleship']
 
-app = Flask(__name__)
-
 
 # can use your own pretrained model here for CV portion, but this will give accurate results on ships for now
-# model_name = 'ssd_mobilenet_v2_coco_2018_03_29'  # Example model
-# pipeline_config = model_name + '/pipeline.config'
-# model_dir = model_name + '/checkpoint'
-
-# # configs = config_util.get_configs_from_pipeline_file(pipeline_config)
-# model_config = configs['model']
-# detection_model = tf.saved_model.load(model_dir)
-
 # SQLite DB Creation
 conn = sqlite3.connect('ships_data.db')
 c = conn.cursor()
@@ -92,23 +82,6 @@ def preprocess_data(raw_data):
     return averaged_data
 
 
-# def confirm_with_satellite(image_path):
-#     # this should come from satellite
-#     image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
-
-#     image_np = np.array(image)
-
-#     # Actual detection
-#     input_tensor = tf.convert_to_tensor(
-#         np.expand_dims(image_np, 0), dtype=tf.float32)
-#     detections = detection_model(input_tensor)
-
-#     if detections.get('num_detections') > 0:
-#         return True
-#     else:
-#         return False
-
-
 @app.route('/detect', methods=['GET'])
 def detect_ship():
     raw_data = retrieve_data_from_accelerometer()
@@ -134,7 +107,7 @@ def detect_ship():
             #     c.execute("INSERT INTO ship_detections (timestamp, ship_type, confidence, image_path) VALUES (datetime('now'), ?, ?, ?)",
             #               (prediction[0], confidence, image_path))
             #     conn.commit()
-            alarm_message = "Detection not confirmed by satellite"
+            alarm_message = "LOW CONFIDENCE DETECTION, ALARM THOUGH"
         else:
             alarm_message = "High confidence detection, alarm sounded"
 
@@ -148,9 +121,5 @@ def detect_ship():
 
 
 @app.route('/')
-def home():
+def index():
     return render_template('index.html')
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
