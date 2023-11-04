@@ -1,6 +1,7 @@
 from joblib import load
+
 from app import app
-from flask import render_template
+from flask import render_template, jsonify
 import numpy as np
 import sqlite3
 import cv2
@@ -67,57 +68,54 @@ def retrieve_data_from_accelerometer():
     # wave2_accel4 = np.where((t >= 7) & (t < 40), wake_wave_4, 0)
 
     accel1 = wave2_accel1
-    fourier_transform = np.fft.fft(accel1)
+    # fourier_transform = np.fft.fft(accel1)
     # accel2 = wave1_accel2 + wave2_accel2
     # accel3 = wave1_accel3 + wave2_accel3
     # accel4 = wave1_accel4 + wave2_accel4
-    return fourier_transform  # training was done in the frequency domain
+    accel1 = np.resize(accel1,new_shape=(64, 64))  # If 64x64 was the training size
+    accel1 = np.array(accel1).flatten()
+
+    # Make sure the flattened array has the same length as the training data feature count
+    assert accel1.shape[0] == 4096
+
+    # Reshape the data for prediction as a two-dimensional array
 
 
-def preprocess_data(raw_data):
-    raw_data_array = np.array(raw_data)
-    if raw_data_array.shape[0] != 4 and raw_data_array.shape[1] == 4:
-        raw_data_array = raw_data_array.T
-    averaged_data = raw_data_array.mean(axis=1)
-    return averaged_data
+
+
+    return accel1  # training was done in the frequency domain
 
 
 @app.route('/detect', methods=['GET'])
 def detect_ship():
     raw_data = retrieve_data_from_accelerometer()
 
-    data_for_prediction = preprocess_data(raw_data)
+    data_for_prediction = raw_data.reshape(1, -1)
 
-    prediction = model.predict([data_for_prediction])
-    if prediction[0] in ships:
-        # Check confidence level (if your model provides probabilities)
-        # Assuming the model.predict_proba method is available and used here
-        confidence = max(model.predict_proba([data_for_prediction])[0])
-
-        if confidence < 0.8:  # Assuming 80% confidence threshold
-            # This should be provided by the client or be a static path
-            # image_path = '/Users/owebb/defense-tech-hackathon/satelite_images/sat1.jpg'
-            # confirmation = confirm_with_satellite(image_path)
-            # if confirmation:
-            #     c.execute("INSERT INTO ship_detections (timestamp, ship_type, confidence, image_path) VALUES (datetime('now'), ?, ?, ?)",
-            #               (prediction[0], confidence, image_path))
-            #     conn.commit()
-            #     alarm_message = "SOUNDING ALARM VIA LTE TO MAINLAND"
-            # else:
-            #     c.execute("INSERT INTO ship_detections (timestamp, ship_type, confidence, image_path) VALUES (datetime('now'), ?, ?, ?)",
-            #               (prediction[0], confidence, image_path))
-            #     conn.commit()
-            alarm_message = "LOW CONFIDENCE DETECTION, ALARM THOUGH"
-        else:
-            alarm_message = "High confidence detection, alarm sounded"
-
-        return jsonify({
-            'prediction': prediction[0],
-            'confidence': confidence,
-            'alarm_message': alarm_message
-        })
+    prediction = model.predict(data_for_prediction)
+    # Check confidence level (if your model provides probabilities)
+    # Assuming the model.predict_proba method is available and used here
+    confidence = max(model.predict_proba(data_for_prediction)[0])
+    if confidence < 0.8:  # Assuming 80% confidence threshold
+        # This should be provided by the client or be a static path
+        # image_path = '/Users/owebb/defense-tech-hackathon/satelite_images/sat1.jpg'
+        # confirmation = confirm_with_satellite(image_path)
+        # if confirmation:
+        #     c.execute("INSERT INTO ship_detections (timestamp, ship_type, confidence, image_path) VALUES (datetime('now'), ?, ?, ?)",
+        #               (prediction[0], confidence, image_path))
+        #     conn.commit()
+        #     alarm_message = "SOUNDING ALARM VIA LTE TO MAINLAND"
+        # else:
+        #     c.execute("INSERT INTO ship_detections (timestamp, ship_type, confidence, image_path) VALUES (datetime('now'), ?, ?, ?)",
+        #               (prediction[0], confidence, image_path))
+        #     conn.commit()
+        alarm_message = "LOW CONFIDENCE DETECTION, ALARM THOUGH"
     else:
-        return jsonify({'message': 'No ship detected'})
+        alarm_message = "High confidence detection, alarm sounded"
+
+    return jsonify({
+        'alarm_message': alarm_message
+    })
 
 
 @app.route('/')

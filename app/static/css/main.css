@@ -73,6 +73,18 @@ body {
   /* Center the buoy */
 }
 
+.wave {
+  width: 120px;
+  height: 120px;
+  opacity: 0.5;
+  background: rgba(255, 255, 255, 0.3);
+  position: absolute;
+  border-radius: 50%;
+  animation: moveWave 10s linear infinite;
+  pointer-events: none;
+  /* Ensures the waves do not interfere with other elements */
+}
+
 /* Animation for the wake effect */
 @keyframes wake-effect {
   0% {
@@ -84,6 +96,22 @@ body {
   }
 
   100% {
+    opacity: 0;
+  }
+}
+
+
+
+@keyframes moveWave {
+  0% {
+    top: -120px;
+    right: -120px;
+    opacity: 0.5;
+  }
+
+  100% {
+    top: calc(100vh + 120px);
+    right: calc(100vw + 120px);
     opacity: 0;
   }
 }

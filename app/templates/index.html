@@ -7,20 +7,45 @@
   <title>Boat Wake Simulation</title>
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      /* Prevents scrollbars */
+    }
+
     #ocean {
-      width: 500px;
-      height: 500px;
+      width: 100vw;
+      /* 100% of the viewport width */
+      height: 100vh;
+      /* 100% of the viewport height */
       background: #0099FF;
       position: relative;
-      overflow: hidden;
+      display: flex;
+      /* Enables flexbox layout */
+      align-items: center;
+      /* Centers content vertically */
+      justify-content: center;
+      /* Centers content horizontally */
     }
 
     .boat {
-      width: 50px;
-      height: 20px;
-      background: #333;
+      width: 30px;
+      /* Adjust as necessary to match the aspect ratio of your boat image */
+      height: 50px;
+      /* Adjust as necessary to match the aspect ratio of your boat image */
       position: absolute;
       cursor: move;
+      background-image: url('../static/images/boat.png');
+      /* Ensure the path is correct */
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      /* Prevents the image from repeating */
+      transform: rotate(90deg);
+      /* Rotates the boat to lay horizontal */
+      left: 10px; /* Offset from the right edge */
+      top: 10px; /* Offset from the top edge */
     }
 
     .wake {
@@ -35,22 +60,31 @@
       background: #FFD700;
       position: absolute;
       border-radius: 50%;
+      /* The background is set to an image of a buoy, if you have one */
+      /* background-image: url('../static/images/buoy.png'); */
+      /* Update this path if necessary */
+      background-size: cover;
+      /* This will ensure the image covers the buoy area */
     }
+
   </style>
 </head>
 
 <body>
 
-  <div id="ocean">
-    <div class="boat" id="boat"></div>
-    <div class="buoy" style="top: 250px; left: 250px;"></div>
-  </div>
+<div id="ocean">
+  <div class="boat" id="boat"></div>
+  <div class="buoy"></div>
+  <!-- Add multiple waves for a better effect -->
+
+  <!-- ... add as many as you want -->
+</div>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
   <script src="../static/js/app.js"></script>
   <script>
-    // JavaScript will be added here
+    // JavaScript code can be included here if necessary
   </script>
 
 </body>

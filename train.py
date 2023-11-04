@@ -34,7 +34,7 @@ X_train, X_test, y_train, y_test = train_test_split(
     data, labels, test_size=0.2, random_state=42)
 
 # can swap out for any clustering model
-clf = KNeighborsClassifier()
+clf = KNeighborsClassifier(n_neighbors=2)
 
 clf.fit(X_train, y_train)
 
